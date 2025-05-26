@@ -1,29 +1,22 @@
-const Measurement = require('../models/Measurement');
+// src/controllers/measurementController.js
+const measurementService = require('../services/measurementService');
 
-exports.create = async (req, res) => {
+exports.create = (req, res) => {
   try {
-    const { voltage, current, temperature } = req.body;
-    if (voltage == null || current == null) {
-      return res.status(400).json({ error: 'voltage e current são obrigatórios' });
-    }
-
-    const m = await Measurement.create({ voltage, current, temperature });
-    return res.status(201).json(m);
+    const saved = measurementService.saveMeasurement(req.body);
+    res.status(201).json(saved);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Erro interno' });
+    res.status(500).json({ error: 'Falha ao salvar medição' });
   }
 };
 
-exports.list = async (req, res) => {
+exports.list = (req, res) => {
   try {
-    const list = await Measurement.findAll({
-      order: [['timestamp', 'DESC']],
-      limit: 100,
-    });
-    return res.json(list);
+    const all = measurementService.getMeasurements(100);
+    res.json(all);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ error: 'Erro interno' });
+    res.status(500).json({ error: 'Falha ao ler medições' });
   }
 };
