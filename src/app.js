@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use('/api', measurementRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 
 sequelize.sync()
   .then(() => {
